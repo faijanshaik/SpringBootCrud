@@ -47,14 +47,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto getStudentById(Long id) {
+        methodName = ".getStudentById";
+        log.info(CLASS_NAME + methodName + "::ENTER");
+        log.info(CLASS_NAME + methodName + "::  student By Id call triggered");
         Student student=studentRepository.findById(id)
                 .orElseThrow(() ->new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Student not found with id : {}" +id));
+        log.info(CLASS_NAME + methodName + "::EXIT");
         return modelMapper.map(student, StudentDto.class);
     }
 
     @Override
     public StudentDto addStudent(StudentRequest studentRequest) {
-        String methodName = ".addStudet";
+        methodName = ".addStudet";
         log.info(CLASS_NAME + methodName + "::ENTER");
         Student student=null;
         try{
