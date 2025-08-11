@@ -51,7 +51,7 @@ public class StudentServiceImpl implements StudentService {
         log.info(CLASS_NAME + methodName + "::ENTER");
         log.info(CLASS_NAME + methodName + "::  student By Id call triggered");
         Student student=studentRepository.findById(id)
-                .orElseThrow(() ->new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Student not found with id : {}" +id));
+                .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found with id : {}" +id));
         log.info(CLASS_NAME + methodName + "::EXIT");
         return modelMapper.map(student, StudentDto.class);
     }
@@ -76,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
         methodName = ".deleteStudent";
         log.info(CLASS_NAME + methodName +"::ENTER");
         if(!studentRepository.findById(id).isPresent()){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Student not found with id : {}" +id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found with id : {}" +id);
         }
         log.info(CLASS_NAME + methodName +"::EXIT");
         studentRepository.deleteById(id);
@@ -89,6 +89,9 @@ public class StudentServiceImpl implements StudentService {
         Student updatedStudent=null;
         Student student = modelMapper.map(studentRequest, Student.class);
         try{
+            if(!studentRepository.findById(id).isPresent()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found with id : {}" +id);
+            }
             updatedStudent = studentRepository.save(student);
         } catch(Exception e){
             log.error(CLASS_NAME + methodName + "::Exception Occured :" +e.getMessage());
